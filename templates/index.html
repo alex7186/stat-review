@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %} {{content_list[0]}} {% endblock %}
+{% block content %}
+<h2> {{content_list[0]}} </h2>
+<h4> Теория вероятности и Мат. статистика </h4>
+<!-- <hr> -->
+
+
+<ul>
+
+ {% for key, value in content_list[1].items() %}
+ <li>
+  <hr>
+  
+  <h3>{{ value['title'] }}</h3>
+
+  {% if value['type'] == 'post' %}
+  <p>{{ value['content'] }}</p>
+
+    
+  {% elif value['type'] == 'form' %}
+  <form method="post">
+    {% for form_item in value['content'] %}
+    <div class="form-group">
+        
+        
+      {% if (form_item['type'] == 'input') and (form_item['input_type'] == 'text') %}
+      <label for="{{form_item['name']}}">{{form_item['value']}}</label>
+      <input 
+      type="{{form_item['input_type']}}" 
+      name="{{form_item['name']}}"
+      placeholder="{{ form_item['placeholder'] }}" 
+      class="form-control"
+      value="{{ request.form[form_item['name']] }}">
+    </input>
+      
+      
+    {% elif form_item['input_type'] == 'radio' %}
+    <input class="form-check-input" type="radio" name="{{form_item['name']}}" id="{{form_item['id']}}" value="{{form_item['id']}}">
+      <label class="form-check-label" for="{{form_item['id']}}"> {{form_item['value']}}</label>
+    </input>
+
+     
+    {% elif form_item['input_type'] == 'show-text' %}
+     <div class="form_text">{{form_item['placeholder']}}</div>
+
+    {% elif form_item['input_type'] == 'show-image' %}
+      <span class="border-container">
+        <img src="{{form_item['src']}}">
+      </span>
+    
+    {% elif form_item['input_type'] == 'show-a' %}
+      <a href="{{ form_item['a'] }}" target="{{ form_item['target'] }}">Нажмите для загрузки</a>
+
+    {% elif form_item['type'] == 'button' %}
+    <button 
+    type="{{form_item['btntype']}}" 
+    class="btn btn-primary"
+    style="margin-top: 10px;"> {{form_item['name']}}
+  </button>
+    
+  {% endif %}
+</div>
+{% endfor %}
+</form>
+{% endif %}
+
+{% if 'tags' in value.keys() %}
+<div class="tags_group">
+  {% for tag in value['tags'] %}
+  <span class="badge badge-primary">{{ tag }}</span>
+  {% endfor %}
+</div>
+{% endif %}           
+</li>
+
+
+{% endfor %}
+
+</ul>
+<!-- <hr> -->
+
+{% endblock %}
