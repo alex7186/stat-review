@@ -6,20 +6,20 @@ from docx import Document
 
 import io, os.path, base64
 
-import input_file
-import functions
+import content_config
+import calculation_logic.calculating_functions as functions
 
 # Чертовски красивый снег
 # Из окна идёт снег. Скоро все деревья им будут покрыты, и будет очень красиво.
 
 app = Flask(__name__)
-app.config['SECRET KEY'] = input_file.app_secret_key
-app.secret_key = input_file.app_secret_key
+app.config['SECRET KEY'] = content_config.app_secret_key
+app.secret_key = content_config.app_secret_key
 app.config['UPLOAD_FOLDER'] = './uploads'
 
 
-app.config['SESSION_TYPE'] = input_file.app_sessin_type
-app.debug = input_file.app_debug
+app.config['SESSION_TYPE'] = content_config.app_sessin_type
+app.debug = content_config.app_debug
 
 buf, document, intervals, absolute_frequency, result_file_name, a, k = None, None, None, None, None, None, None
 
@@ -31,7 +31,7 @@ def index():
 
     global variant_and_distribution
     global buf, document, intervals, absolute_frequency, result_file_name, a, k
-    content_list = [input_file.app_name, {}]
+    content_list = [content_config.app_name, {}]
         
 
     # считываем вариант
@@ -50,7 +50,7 @@ def index():
         # вариант не введен, возвращаемся ко вводу
         if variant_and_distribution == 0:
             this_content = content_list
-            this_content[1].update(input_file.variant_selection)
+            this_content[1].update(content_config.variant_selection)
             return render_template('index.html', content_list=this_content)
 
         # вариант неверен, выводим сообщение
@@ -63,14 +63,21 @@ def index():
             result_file_name, a, k = functions.get_variant(variant)
             document = Document()
 
-            buf, document, intervals, absolute_frequency = functions.pre_return(result_file_name, a, k, document, input_file.color, )
+            buf, document, intervals, absolute_frequency = functions.pre_return(
+                result_file_name, 
+                a, 
+                k, 
+                document, 
+                content_config.color, )
+
             data = base64.b64encode(buf.getbuffer()).decode("ascii")
 
 
             this_content = content_list
-            this_content[1].update(input_file.prepare_dist_selection(data))
+            this_content[1].update(content_config.prepare_dist_selection(data))
             variant_and_distribution = 2
             return render_template('index.html', content_list=this_content)
+
 
     # страница скачивания и возврата к выбору варианта
     if variant_and_distribution <=2:
@@ -82,10 +89,19 @@ def index():
         if distr_type:
             document.add_picture(buf, width=Inches(5.5))
             document.add_page_break()
-            document = functions.post_return(document, result_file_name, distr_type, a, intervals, k, absolute_frequency)
+
+            document = functions.post_return(
+                document, 
+                result_file_name, 
+                distr_type, 
+                a, 
+                intervals, 
+                k, 
+                absolute_frequency)
 
             buf_document = io.BytesIO()
             document.save(buf_document)
+
 
             # сохраняем готовый файл
             with open('uploads/'+result_file_name, 'wb') as f:
@@ -93,7 +109,7 @@ def index():
 
             this_content = content_list
 
-            this_content[1].update(input_file.prepare_download_link(a='/uploads/'+result_file_name, target=result_file_name))
+            this_content[1].update(content_config.prepare_download_link(a='/uploads/'+result_file_name, target=result_file_name))
             variant_and_distribution = 0
             return render_template('index.html', content_list=this_content)
 
@@ -101,10 +117,11 @@ def index():
     variant = -1
     variant_and_distribution = 0
     this_content = content_list
-    this_content[1].update(input_file.variant_selection)
+    this_content[1].update(content_config.variant_selection)
     return render_template('index.html', content_list=this_content)
 
 
+# путь скачивания файла
 @app.route('/uploads/<path:filename>', methods=['GET', 'POST'])
 def download(filename):
 
