@@ -49,8 +49,32 @@
       </div>
     </a>
 
+    
+
 
     {% block content %} {% endblock %}
+      <div class="table-container">
+      <p>Последние действия:</p>
+      <!-- <a href="#anch_end">ENDING</a> -->
+
+      <table class="styled-table">
+      {% for row in latest %}
+          {% if loop.index == 1 %}
+              <thead>
+          {% elif loop.index == 2 %}
+              </thead>  
+              <tbody>
+          {% endif %}
+          <tr>
+              <td>{{ row[0] }}</td>
+              <td>{{ row[1] }}</td>            
+          </tr>
+          
+          </tbody>
+      {% endfor %}
+
+      </table>
+  </div>
   </div>
 
   <!-- <div class='footer'> Александр Великоиваненко, 2021 год</div> -->

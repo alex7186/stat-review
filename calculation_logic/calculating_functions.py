@@ -82,28 +82,33 @@ def pre_return(result_file_name, a, k, document, color, plt=plt):
         distribution.update({intervals[ii] : common_b})
         distribution_clean.update({intervals[ii] : absolute_frequency[ii]})
 
-    fig = plt.figure()
-    fig.patch.set_facecolor((247/255, 247/255, 247/255))
-    
-    ax = fig.add_subplot(111)
-    ax.set_facecolor((247/255, 247/255, 247/255))
+    fig, ax = plt.subplots(1, 1)
 
-    # plt.margins(0)
-    plt.tight_layout(pad=1.2)
     plt.tight_layout()
 
     x, y = list(distribution_clean.keys())[1:], list(distribution_clean.values())[1:]
-    _ = plt.xticks(sorted(intervals_middles), rotation=20)
-    _ = plt.step(x, y, color=color, where='post', linewidth=3, alpha=0.8)
-    _ = plt.hlines(y[-1], xmin=x[-1], xmax=x[-1]+h, color=color, linewidth=3)
-    _ = plt.vlines(x[-1]+h, ymin=0, ymax=y[-1], color=color, linewidth=3)
-    _ = plt.ylabel('Абсолютная частота mi')
+    _ = ax.set_xticks(
+        sorted(intervals_middles), 
+        )
+    
+    _ = ax.step(x, y, color=color, where='post', linewidth=3, alpha=0.8)
+    _ = ax.hlines(y[-1], xmin=x[-1], xmax=x[-1]+h, color=color, linewidth=3)
+    _ = ax.vlines(x[-1]+h, ymin=0, ymax=y[-1], color=color, linewidth=3)
+    _ = ax.set_ylabel('Абсолютная частота mi')
     for ii, el in enumerate(x): 
-        _ = plt.vlines(el, ymax=y[ii], ymin=0, color=color, linewidth=3)
+        _ = ax.vlines(el, ymax=y[ii], ymin=0, color=color, linewidth=3)
     _ = plt.grid(axis='y')
 
+    # ax.set_facecolor((247/255, 247/255, 247/255))
+
     buf = io.BytesIO()
-    plt.savefig(buf, format='png', dpi=600,) # facecolor=fig.get_facecolor()
+    plt.savefig(
+        buf, 
+        format='png', 
+        dpi=600, 
+        facecolor=(247/255, 247/255, 247/255)
+        )
+
     plt.close()
     
     return buf, document, intervals, absolute_frequency

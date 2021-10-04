@@ -8,6 +8,7 @@ import io, os.path, base64
 
 import content_config
 import calculation_logic.calculating_functions as functions
+from db_manager import connection, cursor, add_log, get_latest_log
 
 # Чертовски красивый снег
 # Из окна идёт снег. Скоро все деревья им будут покрыты, и будет очень красиво.
@@ -51,7 +52,11 @@ def index():
         if variant_and_distribution == 0:
             this_content = content_list
             this_content[1].update(content_config.variant_selection)
-            return render_template('index.html', content_list=this_content)
+            return render_template(
+                'index.html', 
+                content_list=this_content, 
+                latest= (('Вариант', 'Дата'), *get_latest_log(connection, cursor))
+                )
 
         # вариант неверен, выводим сообщение
         if not variant in functions.available_vars:
@@ -76,11 +81,16 @@ def index():
             this_content = content_list
             this_content[1].update(content_config.prepare_dist_selection(data))
             variant_and_distribution = 2
-            return render_template('index.html', content_list=this_content)
+            return render_template(
+                'index.html', 
+                content_list=this_content, 
+                latest= (('Вариант', 'Дата'), *get_latest_log(connection, cursor))
+                )
 
 
     # страница скачивания и возврата к выбору варианта
     if variant_and_distribution <=2:
+        distr_type = None
         try:
             distr_type = int(request.form['distr_type'])
         except:
@@ -110,15 +120,23 @@ def index():
             this_content = content_list
 
             this_content[1].update(content_config.prepare_download_link(a='/uploads/'+result_file_name, target=result_file_name))
+            add_log(connection, cursor, variant_and_distribution, distr_type)
+
             variant_and_distribution = 0
-            return render_template('index.html', content_list=this_content)
+            return render_template(
+                'index.html', 
+                content_list=this_content, 
+                latest= (('Вариант', 'Дата'), *get_latest_log(connection, cursor)))
 
 
     variant = -1
     variant_and_distribution = 0
     this_content = content_list
     this_content[1].update(content_config.variant_selection)
-    return render_template('index.html', content_list=this_content)
+    return render_template(
+        'index.html', 
+        content_list=this_content, 
+        latest= (('Вариант', 'Дата'), *get_latest_log(connection, cursor)))
 
 
 # путь скачивания файла
