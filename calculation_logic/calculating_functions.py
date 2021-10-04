@@ -104,6 +104,7 @@ def pre_return(result_file_name, a, k, document, color, plt=plt):
 
     buf = io.BytesIO()
     plt.savefig(buf, format='png', dpi=600,) # facecolor=fig.get_facecolor()
+    plt.close()
     
     return buf, document, intervals, absolute_frequency
 
