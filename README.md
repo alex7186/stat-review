@@ -11,8 +11,9 @@ This program can calculate
 * Confidence interval estimation
 
 ## setup
+  1. open <b>command line</b> on windows or <b>terminal</b> on linux
   1. run `pip3 install flask docx base64 sqlite3 matplotlib numpy pandas`
-  2. run `cd <directory to project in your file system>` on linux <br> or windows
+  2. run `cd <directory to project in your file system>`
   3. run `python3 app.py`
   
 ## getting started  
