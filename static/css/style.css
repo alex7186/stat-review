@@ -54,7 +54,7 @@ ul {
 
 form {
 	margin-right: 10%;
-	margin-left: 30px;
+	margin-left: 35px;
 	margin-right: 10%;
 }
 
@@ -200,6 +200,7 @@ img {
     padding-top: 20px;
     margin-bottom: 30px;
     max-width: 350px;
+    margin-left: 35px;
 }
 
 .table-container h3{

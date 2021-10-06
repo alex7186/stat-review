@@ -10,8 +10,6 @@ import content_config
 import calculation_logic.calculating_functions as functions
 from db_manager import connection, cursor, add_log, get_latest_log
 
-# Чертовски красивый снег
-# Из окна идёт снег. Скоро все деревья им будут покрыты, и будет очень красиво.
 
 app = Flask(__name__)
 app.config['SECRET KEY'] = content_config.app_secret_key

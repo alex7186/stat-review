@@ -1,19 +1,9 @@
-from flask import render_template, request, flash, redirect, url_for
-# from datetime import date, datetime
-from docx import Document
-
-import matplotlib.pyplot as plt
-from docx.shared import Inches
-
-import calculation_logic.calculating_functions as functions
-
-# color = 'blue' # #0275d8
 color = (2/255, 117/255, 216/255)
 
 
 app_secret_key = 'my secret key'
 app_sessin_type = 'filesystem'
-app_debug = True
+app_debug = False
 
 
 app_name = 'Первичная статистическая обработка выборки'
@@ -27,7 +17,6 @@ variant_selection = {
         'title':'Номер варианта',
         'content':[
             {'type':'input', 'input_type':'text', 'name':'variant', 'placeholder':'Введите вариат работы от 1 до 76'},
-            # {'type':'input', 'input_type':'text', 'name':'content', 'placeholder':'Post content'},
             {'type':'button', 'btntype':'submit', 'name':'Продолжить'}
             ]
         },

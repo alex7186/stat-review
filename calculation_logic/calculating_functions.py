@@ -3,11 +3,11 @@ import pandas as pd
 
 from docx.shared import Inches
 from docx.shared import Pt
-import matplotlib.pyplot as plt
-import matplotlib
 
-import io
-import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib import rc
+
+from io import BytesIO
 
 input_table_name = 'Varianty_viborok_matstat.xlsx'
 
@@ -15,7 +15,7 @@ font = {'family' : 'normal',
         'weight' : 'bold',
         'size'   : 10}
 
-matplotlib.rc('font', **font)
+rc('font', **font)
 
 laplas_dict = {
     0:    [        0,   3983,7926, 11791,15542,19146,22575,25804,28814,31594,34134,36433,38493,40320,41924,43319,44520,45543,46407,47128,47725,48214,48610,48928,49180,49379,49534,49653,49744,49813,],
@@ -101,7 +101,7 @@ def pre_return(result_file_name, a, k, document, color, plt=plt):
 
     # ax.set_facecolor((247/255, 247/255, 247/255))
 
-    buf = io.BytesIO()
+    buf = BytesIO()
     plt.savefig(
         buf, 
         format='png', 
